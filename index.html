@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Avenoir AI Decision Toolkit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy: #1A1040;
+  --magenta: #C0175D;
+  --purple: #3D1F8C;
+  --coral: #E8405A;
+  --gold: #C89B3C;
+  --offwhite: #F8F6FF;
+  --lavender: #C8B8F0;
+  --border: #E2DCEF;
+  --muted: #6B6080;
+  --card-bg: #FFFFFF;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Lato', sans-serif;
+  background: var(--offwhite);
+  color: var(--navy);
+  line-height: 1.6;
+}
+
+/* ── SERIES COVER ──────────────────────── */
+.series-cover {
+  background: var(--navy);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+}
+
+.cover-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(192,23,93,0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(192,23,93,0.07) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.cover-accent-1 {
+  position: absolute;
+  top: -120px; right: -120px;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  border: 1px solid rgba(192,23,93,0.15);
+}
+
+.cover-accent-2 {
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 360px; height: 360px;
+  border-radius: 50%;
+  border: 1px solid rgba(192,23,93,0.2);
+}
+
+.cover-accent-3 {
+  position: absolute;
+  top: -20px; right: -20px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: rgba(192,23,93,0.12);
+}
+
+.cover-top {
+  padding: 48px 64px 0;
+  position: relative;
+  z-index: 2;
+}
+
+.cover-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 0;
+}
+
+.brand-mark {
+  width: 36px;
+  height: 36px;
+  background: var(--magenta);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-mark svg { width: 20px; height: 20px; }
+
+.brand-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  color: #fff;
+  letter-spacing: 0.02em;
+  font-weight: 400;
+}
+
+.cover-main {
+  padding: 0 64px;
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cover-series-label {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--magenta);
+  font-weight: 700;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cover-series-label::before {
+  content: '';
+  display: block;
+  width: 32px;
+  height: 1px;
+  background: var(--magenta);
+}
+
+.cover-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(44px, 6vw, 72px);
+  line-height: 1.05;
+  color: #fff;
+  font-weight: 400;
+  margin-bottom: 8px;
+}
+
+.cover-title em {
+  font-style: italic;
+  color: var(--magenta);
+}
+
+.cover-subtitle {
+  font-size: clamp(16px, 2vw, 20px);
+  color: var(--lavender);
+  font-weight: 300;
+  margin-bottom: 56px;
+  max-width: 560px;
+  line-height: 1.6;
+}
+
+.card-previews {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 56px;
+}
+
+.card-preview {
+  flex: 1;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 20px 22px;
+  cursor: pointer;
+  transition: all 0.25s;
+  text-decoration: none;
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-preview::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  transition: opacity 0.25s;
+}
+
+.card-preview.p1::before { background: var(--gold); }
+.card-preview.p2::before { background: var(--magenta); }
+.card-preview.p3::before { background: var(--purple); }
+
+.card-preview:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.2);
+  transform: translateY(-2px);
+}
+
+.preview-num {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.p1 .preview-num { color: var(--gold); }
+.p2 .preview-num { color: var(--magenta); }
+.p3 .preview-num { color: var(--lavender); }
+
+.preview-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  color: #fff;
+  margin-bottom: 6px;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+.preview-desc {
+  font-size: 12px;
+  color: rgba(200,184,240,0.6);
+  line-height: 1.5;
+}
+
+.cover-bottom {
+  padding: 32px 64px;
+  border-top: 1px solid rgba(200,184,240,0.12);
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.cover-author {
+  font-size: 13px;
+  color: var(--lavender);
+  line-height: 1.7;
+}
+
+.cover-author strong { color: #fff; font-size: 15px; display: block; margin-bottom: 2px; }
+
+.cover-scroll {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: rgba(200,184,240,0.5);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.scroll-arrow {
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(200,184,240,0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: bounce 2s ease infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
+
+/* ── SHARED CARD CHROME ────────────────── */
+.tool-card {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  page-break-after: always;
+}
+
+.card-header {
+  padding: 40px 64px 32px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.card-header-left { flex: 1; }
+
+.card-num-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.card-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.c1 .card-num { background: var(--gold); color: #fff; }
+.c2 .card-num { background: var(--magenta); color: #fff; }
+.c3 .card-num { background: var(--purple); color: #fff; }
+
+.card-series-text {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(26px, 3.5vw, 38px);
+  line-height: 1.15;
+  color: var(--navy);
+  font-weight: 400;
+  margin-bottom: 8px;
+}
+
+.card-title em { font-style: italic; }
+.c1 .card-title em { color: var(--gold); }
+.c2 .card-title em { color: var(--magenta); }
+.c3 .card-title em { color: var(--purple); }
+
+.card-tagline {
+  font-size: 15px;
+  color: var(--muted);
+  font-weight: 300;
+  line-height: 1.5;
+  max-width: 520px;
+}
+
+.card-header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.use-when {
+  background: var(--navy);
+  border-radius: 8px;
+  padding: 14px 18px;
+  max-width: 220px;
+}
+
+.use-when-label {
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--lavender);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.use-when-text {
+  font-size: 12px;
+  color: #fff;
+  line-height: 1.5;
+}
+
+.use-before {
+  font-size: 11px;
+  color: var(--muted);
+  text-align: right;
+  max-width: 220px;
+  line-height: 1.4;
+}
+
+.card-body {
+  flex: 1;
+  padding: 40px 64px;
+}
+
+/* ── CARD 1: PROBLEM CLARITY CANVAS ────── */
+.c1 { background: #fff; }
+
+.canvas-intro {
+  background: linear-gradient(135deg, #FEFBF0 0%, #FFF8E8 100%);
+  border: 1px solid rgba(200,155,60,0.25);
+  border-left: 4px solid var(--gold);
+  border-radius: 0 8px 8px 0;
+  padding: 18px 22px;
+  margin-bottom: 36px;
+  font-size: 14px;
+  color: #6B5820;
+  line-height: 1.6;
+}
+
+.canvas-intro strong { color: #4A3C0F; }
+
+.canvas-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.canvas-block {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.canvas-block-header {
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.canvas-step-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.canvas-block-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: 0.01em;
+}
+
+.canvas-block-prompt {
+  font-size: 11px;
+  color: var(--muted);
+  padding: 14px 18px 4px;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.write-area {
+  margin: 10px 18px 16px;
+  background: var(--offwhite);
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  min-height: 80px;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: rgba(107,96,128,0.4);
+  display: flex;
+  align-items: flex-start;
+}
+
+.write-area-sm {
+  min-height: 52px;
+}
+
+.canvas-block-full {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+/* Decision gate */
+.decision-gate {
+  background: var(--navy);
+  border-radius: 12px;
+  padding: 28px 32px;
+  margin-bottom: 0;
+}
+
+.gate-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  color: #fff;
+  margin-bottom: 20px;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gate-icon {
+  width: 28px;
+  height: 28px;
+  background: var(--gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.gate-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+
+.gate-option {
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid;
+}
+
+.gate-option.green {
+  background: rgba(13,158,106,0.12);
+  border-color: rgba(13,158,106,0.3);
+}
+
+.gate-option.amber {
+  background: rgba(200,155,60,0.12);
+  border-color: rgba(200,155,60,0.3);
+}
+
+.gate-option.red {
+  background: rgba(232,64,90,0.12);
+  border-color: rgba(232,64,90,0.3);
+}
+
+.gate-option-label {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.gate-option.green .gate-option-label { color: #0D9E6A; }
+.gate-option.amber .gate-option-label { color: var(--gold); }
+.gate-option.red .gate-option-label { color: var(--coral); }
+
+.gate-option-title {
+  font-size: 13px;
+  color: #fff;
+  margin-bottom: 6px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.gate-option-desc {
+  font-size: 11px;
+  color: rgba(200,184,240,0.7);
+  line-height: 1.5;
+}
+
+/* ── CARD 2: EVIDENCE HIERARCHY ─────────── */
+.c2 { background: var(--offwhite); }
+
+.evidence-intro {
+  background: rgba(192,23,93,0.06);
+  border: 1px solid rgba(192,23,93,0.15);
+  border-left: 4px solid var(--magenta);
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin-bottom: 32px;
+  font-size: 14px;
+  color: #5A1028;
+  line-height: 1.6;
+}
+
+.evidence-ladder {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 32px;
+  position: relative;
+}
+
+.evidence-ladder::before {
+  content: '';
+  position: absolute;
+  left: 32px;
+  top: 40px;
+  bottom: 40px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--magenta), rgba(192,23,93,0.1));
+}
+
+.evidence-level {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 0;
+  position: relative;
+  margin-bottom: 0;
+}
+
+.level-marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.level-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.level-line {
+  width: 2px;
+  flex: 1;
+  min-height: 16px;
+}
+
+.level-content {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin: 8px 0 8px 0;
+  transition: border-color 0.2s;
+}
+
+.level-content:hover { border-color: var(--magenta); }
+
+.evidence-level.e5 .level-content { border-color: var(--magenta); background: rgba(192,23,93,0.03); }
+.evidence-level.e4 .level-content { border-color: rgba(192,23,93,0.4); }
+.evidence-level.e3 .level-content { border-color: rgba(200,155,60,0.4); }
+.evidence-level.e2 .level-content { }
+.evidence-level.e1 .level-content { }
+
+.e5 .level-dot { border-color: var(--magenta); color: var(--magenta); }
+.e4 .level-dot { border-color: rgba(192,23,93,0.5); color: rgba(192,23,93,0.7); }
+.e3 .level-dot { border-color: var(--gold); color: var(--gold); }
+.e2 .level-dot { border-color: #8B8AA0; color: #8B8AA0; }
+.e1 .level-dot { border-color: #B4B2C8; color: #B4B2C8; }
+
+.e5 .level-line { background: linear-gradient(to bottom, var(--magenta), rgba(192,23,93,0.4)); }
+.e4 .level-line { background: linear-gradient(to bottom, rgba(192,23,93,0.4), var(--gold)); }
+.e3 .level-line { background: linear-gradient(to bottom, var(--gold), #8B8AA0); }
+.e2 .level-line { background: linear-gradient(to bottom, #8B8AA0, #B4B2C8); }
+.e1 .level-line { background: transparent; }
+
+.level-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.level-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.level-tag {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-weight: 700;
+}
+
+.e5 .level-tag { background: rgba(192,23,93,0.1); color: var(--magenta); }
+.e4 .level-tag { background: rgba(61,31,140,0.1); color: var(--purple); }
+.e3 .level-tag { background: rgba(200,155,60,0.1); color: var(--gold); }
+.e2 .level-tag { background: rgba(107,96,128,0.1); color: var(--muted); }
+.e1 .level-tag { background: rgba(180,178,200,0.15); color: #8B8AA0; }
+
+.level-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.55;
+  margin-bottom: 6px;
+}
+
+.level-example {
+  font-size: 11px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.e5 .level-example { color: var(--magenta); font-style: normal; font-weight: 700; }
+
+/* 7 questions */
+.questions-header {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  color: var(--navy);
+  margin-bottom: 16px;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.questions-header::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.questions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.question-item {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.q-icon {
+  width: 24px;
+  height: 24px;
+  background: var(--navy);
+  border-radius: 50%;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.q-text-block {}
+.q-label {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--magenta);
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+
+.q-text-full {
+  font-size: 13px;
+  color: var(--navy);
+  line-height: 1.5;
+}
+
+.q-signal {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.q-signal strong { color: #0D9E6A; }
+.q-signal em { color: var(--coral); font-style: normal; }
+
+/* ── CARD 3: VENDOR VETTING RUBRIC ──────── */
+.c3 { background: #fff; }
+
+.rubric-intro {
+  background: rgba(61,31,140,0.05);
+  border: 1px solid rgba(61,31,140,0.15);
+  border-left: 4px solid var(--purple);
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin-bottom: 28px;
+  font-size: 14px;
+  color: #221050;
+  line-height: 1.6;
+}
+
+.rubric-table-wrap {
+  margin-bottom: 28px;
+  overflow: visible;
+}
+
+.rubric-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  font-size: 12px;
+}
+
+.rubric-table th {
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.rubric-table th:first-child {
+  background: var(--navy);
+  color: #fff;
+  width: 170px;
+}
+
+.rubric-table th.s1 { background: #F5F0E8; color: #7A5C20; }
+.rubric-table th.s2 { background: #FFF0E8; color: #8A3A20; }
+.rubric-table th.s3 { background: #FFF0F5; color: #7A1038; }
+.rubric-table th.s4 { background: #EEF0FF; color: #2A1880; }
+.rubric-table th.s5 { background: #F0FEEE; color: #1A5010; }
+.rubric-table th.score-col { background: var(--navy); color: var(--lavender); text-align: center; width: 56px; }
+
+.rubric-table td {
+  padding: 11px 14px;
+  border-top: 1px solid var(--border);
+  vertical-align: top;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.rubric-table td:first-child {
+  background: var(--offwhite);
+  font-weight: 700;
+  color: var(--navy);
+  font-size: 12px;
+  border-right: 1px solid var(--border);
+}
+
+.rubric-table td.score-input {
+  text-align: center;
+  background: rgba(61,31,140,0.04);
+  font-size: 16px;
+  color: rgba(61,31,140,0.2);
+  font-weight: 300;
+  vertical-align: middle;
+}
+
+.rubric-table tr:nth-child(even) td:not(:first-child):not(.score-input) {
+  background: rgba(248,246,255,0.5);
+}
+
+.rubric-table tr:hover td { background-color: rgba(61,31,140,0.03); }
+.rubric-table tr:hover td:first-child { background-color: rgba(61,31,140,0.06); }
+
+/* Scoring summary */
+.scoring-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.score-tiers {
+  background: var(--navy);
+  border-radius: 10px;
+  padding: 20px 24px;
+}
+
+.score-tiers-title {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--lavender);
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.score-tier-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(200,184,240,0.1);
+}
+
+.score-tier-row:last-child { border-bottom: none; }
+
+.score-range {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  color: #fff;
+  min-width: 48px;
+  font-weight: 400;
+}
+
+.score-tier-info {}
+.score-tier-label { font-size: 12px; font-weight: 700; color: #fff; }
+.score-tier-action { font-size: 11px; color: var(--lavender); margin-top: 1px; }
+
+.score-tier-row.st-green .score-range { color: #0D9E6A; }
+.score-tier-row.st-blue .score-range { color: #4A8FD4; }
+.score-tier-row.st-amber .score-range { color: var(--gold); }
+.score-tier-row.st-red .score-range { color: var(--coral); }
+
+.mandatory-checks {
+  background: var(--offwhite);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+}
+
+.mandatory-title {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 700;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mandatory-title::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--coral);
+  border-radius: 50%;
+}
+
+.check-item {
+  display: flex;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+  font-size: 13px;
+}
+
+.check-item:last-child { border-bottom: none; }
+
+.check-box {
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 3px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.check-text { color: var(--navy); line-height: 1.45; }
+.check-text em { color: var(--coral); font-style: normal; font-size: 11px; display: block; margin-top: 2px; }
+
+/* ── SHARED FOOTER ──────────────────────── */
+.card-footer {
+  padding: 20px 64px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--navy);
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.footer-credit {
+  font-size: 11px;
+  color: var(--lavender);
+  line-height: 1.6;
+}
+
+.footer-credit strong { color: #fff; }
+
+.footer-series {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.series-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  opacity: 0.4;
+}
+
+.series-dot.active { opacity: 1; }
+.sd1 { background: var(--gold); }
+.sd2 { background: var(--magenta); }
+.sd3 { background: var(--purple); }
+
+.footer-contact {
+  font-size: 11px;
+  color: rgba(200,184,240,0.6);
+  text-align: right;
+  line-height: 1.6;
+}
+
+/* ── RESPONSIVE ─────────────────────────── */
+@media (max-width: 800px) {
+  .cover-main, .cover-top, .cover-bottom { padding-left: 32px; padding-right: 32px; }
+  .card-header, .card-body, .card-footer { padding-left: 24px; padding-right: 24px; }
+  .canvas-grid { grid-template-columns: 1fr; }
+  .gate-grid { grid-template-columns: 1fr; }
+  .questions-grid { grid-template-columns: 1fr; }
+  .scoring-summary { grid-template-columns: 1fr; }
+  .card-previews { flex-direction: column; }
+  .card-header { flex-direction: column; }
+  .cover-series-label::before { display: none; }
+}
+
+@media print {
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .tool-card { page-break-after: always; }
+  .series-cover { page-break-after: always; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ SERIES COVER ══════════════════════════════════════ -->
+<div class="series-cover">
+  <div class="cover-grid"></div>
+  <div class="cover-accent-1"></div>
+  <div class="cover-accent-2"></div>
+  <div class="cover-accent-3"></div>
+
+  <div class="cover-top">
+    <div class="cover-brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="7" height="7" rx="1.5" fill="white"/>
+          <rect x="11" y="2" width="7" height="7" rx="1.5" fill="white" opacity="0.5"/>
+          <rect x="2" y="11" width="7" height="7" rx="1.5" fill="white" opacity="0.5"/>
+          <rect x="11" y="11" width="7" height="7" rx="1.5" fill="white" opacity="0.8"/>
+        </svg>
+      </div>
+      <span class="brand-name">Avenoir Insights</span>
+    </div>
+  </div>
+
+  <div class="cover-main">
+    <div class="cover-series-label">The Avenoir AI Decision Toolkit &nbsp;·&nbsp; Behavioral Health AI Summit 2026</div>
+    <h1 class="cover-title">Before you buy<br>an AI tool,<br><em>read this.</em></h1>
+    <p class="cover-subtitle">Three tools for behavioral health executives, designed to be used in order. Built on research and data. No vendor affiliation. No sales pitch.</p>
+
+    <div class="card-previews">
+      <a href="#card1" class="card-preview p1">
+        <div class="preview-num">Card 1 of 3</div>
+        <div class="preview-title">The Problem Clarity Canvas</div>
+        <div class="preview-desc">Is AI actually the right solution? Get clear before you evaluate anything.</div>
+      </a>
+      <a href="#card2" class="card-preview p2">
+        <div class="preview-num">Card 2 of 3</div>
+        <div class="preview-title">The Clinical Evidence Hierarchy</div>
+        <div class="preview-desc">Five levels of evidence. Seven questions to ask any vendor. Before you sign anything.</div>
+      </a>
+      <a href="#card3" class="card-preview p3">
+        <div class="preview-num">Card 3 of 3</div>
+        <div class="preview-title">The Vendor Vetting Rubric</div>
+        <div class="preview-desc">Score any AI tool across five clinical dimensions. Know your number before you decide.</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="cover-bottom">
+    <div class="cover-author">
+      <strong>Avenoir Insights</strong>
+    </div>
+    <div class="cover-scroll">
+      <div class="scroll-arrow">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <path d="M6 2v8M3 7l3 3 3-3" stroke="rgba(200,184,240,0.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      Scroll to begin
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ CARD 1: PROBLEM CLARITY CANVAS ════════════════════ -->
+<div class="tool-card c1" id="card1">
+  <div class="card-header">
+    <div class="card-header-left">
+      <div class="card-num-label">
+        <div class="card-num">1</div>
+        <span class="card-series-text">The Avenoir AI Decision Toolkit &nbsp;·&nbsp; Card 1 of 3</span>
+      </div>
+      <h2 class="card-title">The Problem<br><em>Clarity Canvas</em></h2>
+      <p class="card-tagline">Complete this before you look at a single vendor. AI is a category of solution — not an answer in itself. This canvas defines the problem you're actually trying to solve and helps you decide whether AI is the right approach.</p>
+    </div>
+    <div class="card-header-right">
+      <div class="use-when">
+        <div class="use-when-label">Use this when</div>
+        <div class="use-when-text">You're considering AI investment, responding to a vendor pitch, or building an internal business case.</div>
+      </div>
+      <div class="use-before">Use before Card 2 (Evidence Hierarchy) and Card 3 (Vendor Rubric)</div>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <div class="canvas-intro">
+      <strong>The most common AI mistake in behavioral health:</strong> selecting a tool before defining the problem. Vendors define the problem for you — usually in a way their product solves. This canvas reverses that. Answer these questions with your leadership team before any vendor enters the room.
+    </div>
+
+    <div class="canvas-grid">
+      <!-- Block 1 -->
+      <div class="canvas-block">
+        <div class="canvas-block-header">
+          <div class="canvas-step-num">1</div>
+          <div class="canvas-block-title">Name the operational problem</div>
+        </div>
+        <div class="canvas-block-prompt">What is actually breaking, slowing down, or failing in your organization? Be specific — not "documentation burden" but "clinicians spend 2+ hrs/day on notes, contributing to our 22% turnover rate."</div>
+        <div class="write-area">Write the problem here in one or two sentences...</div>
+      </div>
+
+      <!-- Block 2 -->
+      <div class="canvas-block">
+        <div class="canvas-block-header">
+          <div class="canvas-step-num">2</div>
+          <div class="canvas-block-title">Quantify the impact</div>
+        </div>
+        <div class="canvas-block-prompt">What does this problem cost in measurable terms? Consider: staff hours lost, turnover costs, patient access delayed, outcomes not measured, revenue not captured.</div>
+        <div class="write-area">What does it cost per month / per year?</div>
+      </div>
+
+      <!-- Block 3 -->
+      <div class="canvas-block">
+        <div class="canvas-block-header">
+          <div class="canvas-step-num">3</div>
+          <div class="canvas-block-title">Trace the root cause</div>
+        </div>
+        <div class="canvas-block-prompt">Ask "why" three times. Is the root cause a process failure, a staffing gap, a data infrastructure problem, a policy gap, or a workflow design issue? AI solves some of these — not all of them.</div>
+        <div class="write-area write-area-sm">Root cause (not symptom)...</div>
+      </div>
+
+      <!-- Block 4 -->
+      <div class="canvas-block">
+        <div class="canvas-block-header">
+          <div class="canvas-step-num">4</div>
+          <div class="canvas-block-title">Define success</div>
+        </div>
+        <div class="canvas-block-prompt">What would "solved" look like in 12 months? Use measurable terms: "Clinician documentation time reduced by 40%," "7-day follow-up rate above 85%," "Intake wait time under 72 hours."</div>
+        <div class="write-area write-area-sm">What does success look like?</div>
+      </div>
+    </div>
+
+    <!-- Block 5: full width -->
+    <div class="canvas-block-full">
+      <div class="canvas-block-header">
+        <div class="canvas-step-num">5</div>
+        <div class="canvas-block-title">Audit existing solutions — what have you already tried?</div>
+      </div>
+      <div class="canvas-block-prompt">Non-AI solutions often solve operational problems just as effectively — and with less governance risk. List what's already been tried, and why it hasn't been enough.</div>
+      <div class="write-area" style="min-height:52px; margin:10px 18px 16px;">What process changes, hires, or tools have already been attempted?</div>
+    </div>
+
+    <!-- Decision Gate -->
+    <div class="decision-gate">
+      <div class="gate-title">
+        <div class="gate-icon">→</div>
+        The AI decision gate: which path does your problem fall into?
+      </div>
+      <div class="gate-grid">
+        <div class="gate-option green">
+          <div class="gate-option-label">Green — Proceed to Card 2</div>
+          <div class="gate-option-title">AI is the right category</div>
+          <div class="gate-option-desc">The problem involves scale, pattern recognition, or automation at a volume humans can't match. The root cause is not a process or staffing gap that could be solved another way. Clinical evidence for AI in this use case exists.</div>
+        </div>
+        <div class="gate-option amber">
+          <div class="gate-option-label">Amber — Pause and investigate</div>
+          <div class="gate-option-title">AI might help, but clarify first</div>
+          <div class="gate-option-desc">The problem could be solved with better process design, a targeted hire, or improved data infrastructure. AI may amplify the problem rather than solve it. Get clearer on root cause before proceeding.</div>
+        </div>
+        <div class="gate-option red">
+          <div class="gate-option-label">Red — Do not proceed to vendor evaluation</div>
+          <div class="gate-option-title">AI is not the right solution</div>
+          <div class="gate-option-desc">The root cause is a workflow, staffing, leadership, or culture problem. AI will not fix it and will add governance risk. Address the underlying issue first — then revisit AI when the foundation is stronger.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <div class="footer-credit"><strong>Avenoir Insights</strong><br></div>
+    <div class="footer-series">
+      <div class="series-dot sd1 active"></div>
+      <div class="series-dot sd2"></div>
+      <div class="series-dot sd3"></div>
+    </div>
+    <div class="footer-contact">Continue to Card 2 →<br>The Clinical Evidence Hierarchy</div>
+  </div>
+</div>
+
+
+<!-- ══ CARD 2: CLINICAL EVIDENCE HIERARCHY ═══════════════ -->
+<div class="tool-card c2" id="card2">
+  <div class="card-header">
+    <div class="card-header-left">
+      <div class="card-num-label">
+        <div class="card-num">2</div>
+        <span class="card-series-text">The Avenoir AI Decision Toolkit &nbsp;·&nbsp; Card 2 of 3</span>
+      </div>
+      <h2 class="card-title">The Clinical<br><em>Evidence Hierarchy</em></h2>
+      <p class="card-tagline">Only 32.8% of AI therapy tools incorporate established psychotherapy theory (Iftikhar et al., AIES 2025). "Evidence-based" means different things to different vendors. This card tells you exactly what to look for — and what questions to ask before any tool enters a patient pathway.</p>
+    </div>
+    <div class="card-header-right">
+      <div class="use-when">
+        <div class="use-when-label">Use this when</div>
+        <div class="use-when-text">A vendor presents their AI tool. You're reviewing a contract or proposal. Your clinical team is evaluating options.</div>
+      </div>
+      <div class="use-before">Use after Card 1. Use before Card 3 (Vendor Rubric).</div>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <div class="evidence-intro">
+      <strong>The procurement literacy gap:</strong> Most behavioral health executives cannot distinguish between Level 1 and Level 5 evidence — and vendors know it. This hierarchy gives you the vocabulary to ask harder questions. A published blog post and a pre-registered RCT in <em>Nature Medicine</em> are not the same thing. Your patients deserve to know the difference.
+    </div>
+
+    <div class="evidence-ladder">
+      <div class="evidence-level e5">
+        <div class="level-marker">
+          <div class="level-dot">5</div>
+          <div class="level-line"></div>
+        </div>
+        <div class="level-content">
+          <div class="level-top">
+            <div class="level-name">Pre-registered RCT with blinded outcome assessment</div>
+            <div class="level-tag">Gold standard</div>
+          </div>
+          <div class="level-desc">Study design registered before data collection. Outcomes assessed by evaluators blinded to treatment group. Published in peer-reviewed clinical journal. Results replicated across settings.</div>
+          <div class="level-example">Example: Limbic Layer study, <em>Nature Medicine</em>, March 2026 — 227 participants, blinded CBT scoring by independent clinicians, pre-registered design.</div>
+        </div>
+      </div>
+
+      <div class="evidence-level e4">
+        <div class="level-marker">
+          <div class="level-dot">4</div>
+          <div class="level-line"></div>
+        </div>
+        <div class="level-content">
+          <div class="level-top">
+            <div class="level-name">Peer-reviewed observational study with large real-world dataset</div>
+            <div class="level-tag">Strong</div>
+          </div>
+          <div class="level-desc">Published in peer-reviewed journal. Large sample size from real clinical deployment (not pilot). Validated clinical outcome measures used. Transparent methodology. No blinding, but no conflicts of interest in study design.</div>
+          <div class="level-example">Example: Limbic Access real-world study, 64,862 patients across 9 NHS Talking Therapies sites, published outcomes including recovery rates and wait time reductions.</div>
+        </div>
+      </div>
+
+      <div class="evidence-level e3">
+        <div class="level-marker">
+          <div class="level-dot">3</div>
+          <div class="level-line"></div>
+        </div>
+        <div class="level-content">
+          <div class="level-top">
+            <div class="level-name">Peer-reviewed pilot study or conference paper</div>
+            <div class="level-tag">Moderate</div>
+          </div>
+          <div class="level-desc">Published in peer-reviewed journal or presented at academic conference with review process. Smaller sample size or limited to one site. Results promising but not yet generalizable. Clinical measures used, but not independently validated.</div>
+          <div class="level-example">Sufficient for consideration — not sufficient for widespread deployment without additional validation in your specific patient population.</div>
+        </div>
+      </div>
+
+      <div class="evidence-level e2">
+        <div class="level-marker">
+          <div class="level-dot">2</div>
+          <div class="level-line"></div>
+        </div>
+        <div class="level-content">
+          <div class="level-top">
+            <div class="level-name">Internal case study or white paper</div>
+            <div class="level-tag">Weak</div>
+          </div>
+          <div class="level-desc">Vendor-produced document describing outcomes at a partner organization. No independent review. Outcome measures may be self-selected. Sample may not be representative. Conflicts of interest not disclosed. Useful for understanding use cases — not for clinical validation claims.</div>
+          <div class="level-example">Ask: Who designed the study? Who selected the metrics? Was there a comparison group?</div>
+        </div>
+      </div>
+
+      <div class="evidence-level e1">
+        <div class="level-marker">
+          <div class="level-dot">1</div>
+          <div class="level-line"></div>
+        </div>
+        <div class="level-content">
+          <div class="level-top">
+            <div class="level-name">Vendor-stated claim / expert opinion</div>
+            <div class="level-tag">Not evidence</div>
+          </div>
+          <div class="level-desc">"Clinically grounded." "Evidence-based." "Clinician-approved." These are marketing claims, not evidence. SOC 2 and HIPAA certifications are data security standards — they say nothing about clinical effectiveness. A vendor saying their tool is "built on CBT principles" is not the same as a study showing it delivers CBT outcomes.</div>
+          <div class="level-example">This is the evidence level of the overwhelming majority of AI tools currently being sold to behavioral health organizations.</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="questions-header">7 questions to ask any vendor</h3>
+    <div class="questions-grid">
+      <div class="question-item">
+        <div class="q-icon">1</div>
+        <div class="q-text-block">
+          <div class="q-label">Evidence level</div>
+          <div class="q-text-full">Do you have peer-reviewed clinical studies? Was the study design pre-registered before data collection began?</div>
+          <div class="q-signal"><strong>Green:</strong> Pre-registered RCT published in clinical journal &nbsp;·&nbsp; <em>Red: "We have a case study from a partner."</em></div>
+        </div>
+      </div>
+      <div class="question-item">
+        <div class="q-icon">2</div>
+        <div class="q-text-block">
+          <div class="q-label">Clinical theory</div>
+          <div class="q-text-full">Which established psychotherapy modalities does your tool incorporate, and how were they operationalized in the AI model?</div>
+          <div class="q-signal"><strong>Green:</strong> Specific modalities named, clinical team involved in design &nbsp;·&nbsp; <em>Red: "Our tool is clinically informed."</em></div>
+        </div>
+      </div>
+      <div class="question-item">
+        <div class="q-icon">3</div>
+        <div class="q-text-block">
+          <div class="q-label">Escalation design</div>
+          <div class="q-text-full">What happens when your AI flags a patient as at-risk or in crisis? Walk me through the exact escalation pathway step by step.</div>
+          <div class="q-signal"><strong>Green:</strong> Documented human-in-loop with defined response time &nbsp;·&nbsp; <em>Red: Vague or dependent on clinician checking the dashboard.</em></div>
+        </div>
+      </div>
+      <div class="question-item">
+        <div class="q-icon">4</div>
+        <div class="q-text-block">
+          <div class="q-label">Bias testing</div>
+          <div class="q-text-full">Has your model been tested for performance differences across race, ethnicity, age, and diagnostic category? Where can I review those results?</div>
+          <div class="q-signal"><strong>Green:</strong> Published disparity analysis &nbsp;·&nbsp; <em>Red: "We trained on a diverse dataset."</em></div>
+        </div>
+      </div>
+      <div class="question-item">
+        <div class="q-icon">5</div>
+        <div class="q-text-block">
+          <div class="q-label">Accountability</div>
+          <div class="q-text-full">What contractual language covers your organization's liability if an AI-assisted decision contributes to a patient harm event?</div>
+          <div class="q-signal"><strong>Green:</strong> Explicit clinical accountability clause &nbsp;·&nbsp; <em>Red: Standard limitation of liability with no clinical carve-out.</em></div>
+        </div>
+      </div>
+      <div class="question-item">
+        <div class="q-icon">6</div>
+        <div class="q-text-block">
+          <div class="q-label">Data practices</div>
+          <div class="q-text-full">Is session content, PHI, or patient interaction data used to train or improve your models? For which customers, under what terms?</div>
+          <div class="q-signal"><strong>Green:</strong> Explicit opt-out or no-training clause in BAA &nbsp;·&nbsp; <em>Red: Training terms not addressed in contract.</em></div>
+        </div>
+      </div>
+      <div class="question-item">
+        <div class="q-icon">7</div>
+        <div class="q-text-block">
+          <div class="q-label">Outcome measurement</div>
+          <div class="q-text-full">What clinical outcome measures (PHQ-9, GAD-7, PCL-5, or equivalent) does your platform support, and how are those results surfaced to clinical leadership?</div>
+          <div class="q-signal"><strong>Green:</strong> Validated MBC measures integrated and reportable &nbsp;·&nbsp; <em>Red: Operational metrics only (notes completed, time saved).</em></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <div class="footer-credit"><strong>Avenoir Insights</strong><br></div>
+    <div class="footer-series">
+      <div class="series-dot sd1"></div>
+      <div class="series-dot sd2 active"></div>
+      <div class="series-dot sd3"></div>
+    </div>
+    <div class="footer-contact">Continue to Card 3 →<br>The Vendor Vetting Rubric</div>
+  </div>
+</div>
+
+
+<!-- ══ CARD 3: VENDOR VETTING RUBRIC ═════════════════════ -->
+<div class="tool-card c3" id="card3">
+  <div class="card-header">
+    <div class="card-header-left">
+      <div class="card-num-label">
+        <div class="card-num">3</div>
+        <span class="card-series-text">The Avenoir AI Decision Toolkit &nbsp;·&nbsp; Card 3 of 3</span>
+      </div>
+      <h2 class="card-title">The Vendor<br><em>Vetting Rubric</em></h2>
+      <p class="card-tagline">Score any AI tool across five clinical dimensions before it enters a patient pathway. Each dimension is rated 1–5. A total score under 15 is a stop sign. Use this with your clinical leadership team — not alone, and not after you've already signed a contract.</p>
+    </div>
+    <div class="card-header-right">
+      <div class="use-when">
+        <div class="use-when-label">Use this when</div>
+        <div class="use-when-text">You have 2–3 finalists from vendor evaluation and need a structured clinical decision framework before procurement.</div>
+      </div>
+      <div class="use-before">Use after Cards 1 and 2. Involve your CMO, CCO, or clinical director.</div>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <div class="rubric-intro">
+      <strong>How to use this rubric:</strong> Score each vendor on all five dimensions independently. Have at least two clinical leaders score separately, then compare. Disagreements on individual scores are data — discuss them before averaging. A single dimension score of 1 on <em>Escalation Design</em> or <em>Clinical Accountability</em> is a disqualifier regardless of total score.
+    </div>
+
+    <div class="rubric-table-wrap">
+      <table class="rubric-table">
+        <thead>
+          <tr>
+            <th>Dimension</th>
+            <th class="s1">1 — Disqualifying</th>
+            <th class="s2">2 — Insufficient</th>
+            <th class="s3">3 — Developing</th>
+            <th class="s4">4 — Solid</th>
+            <th class="s5">5 — Exemplary</th>
+            <th class="score-col">Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Clinical evidence quality</td>
+            <td>Vendor-stated claims only. No published studies. SOC 2 cited as clinical evidence.</td>
+            <td>Internal case study or white paper. Vendor-produced. No peer review. Self-selected metrics.</td>
+            <td>Conference paper or pilot study. Peer-reviewed. Small sample or single site. Promising but not generalizable.</td>
+            <td>Peer-reviewed observational study. Large real-world dataset. Validated clinical measures. Independent publication.</td>
+            <td>Pre-registered RCT with blinded outcome assessment. Published in top-tier clinical journal. Results replicated.</td>
+            <td class="score-input">__</td>
+          </tr>
+          <tr>
+            <td>Psychotherapy theory grounding</td>
+            <td>No clinical theory stated. "AI-powered" is the only clinical claim. No clinical advisors named.</td>
+            <td>Vague reference to "evidence-based practices." No specific modalities. Clinical team not involved in model design.</td>
+            <td>Specific modality named (e.g., CBT, MI, DBT). Clinical advisors listed. No documentation of how theory was operationalized.</td>
+            <td>Specific modality documented in model design. Clinical team involved. Peer-reviewed validation of clinical outputs.</td>
+            <td>Multiple modalities embedded and validated. Clinical scoring (e.g., CTRS) used in model evaluation. Performance exceeds or matches clinician benchmarks.</td>
+            <td class="score-input">__</td>
+          </tr>
+          <tr>
+            <td>Escalation design &amp; human oversight</td>
+            <td>No escalation pathway defined. AI operates without human oversight. Crisis detection not addressed.</td>
+            <td>Escalation pathway exists in documentation but not operationalized. Dependent on clinician checking dashboard manually.</td>
+            <td>Documented escalation pathway. Alert sent to care team. Response time undefined. Human review required but not tracked.</td>
+            <td>Documented escalation with defined response times. Human-in-loop required before action. Near-real-time alerts. Audit trail maintained.</td>
+            <td>Multi-tiered escalation. Immediate human notification for high-risk flags. Integration with 988/ED protocols. Response time tracked and reported. Fail-safes documented.</td>
+            <td class="score-input">__</td>
+          </tr>
+          <tr>
+            <td>Data governance &amp; consent</td>
+            <td>PHI or session content used for model training without explicit opt-out. No BAA. HIPAA compliance not documented.</td>
+            <td>HIPAA compliant, BAA available. Session content may be used for training — terms unclear or buried in contract.</td>
+            <td>BAA in place. No-training clause available on request. Data retention policy documented. Consent templates provided for clinician use.</td>
+            <td>Explicit no-training clause in BAA. PHI de-identified before any processing. Audit trail available. Client consent protocol built into workflow.</td>
+            <td>Zero PHI exposure. Self-hosted or air-gapped option. Client consent built into intake. Independent security audit published. ISO 27001 or equivalent certified.</td>
+            <td class="score-input">__</td>
+          </tr>
+          <tr>
+            <td>Clinical accountability &amp; contract language</td>
+            <td>Standard limitation of liability. No clinical carve-out. Vendor accepts no responsibility for AI-assisted clinical decisions.</td>
+            <td>Generic indemnification language. Clinical liability not specifically addressed. Outcomes not referenced in contract.</td>
+            <td>Clinical use limitations documented. Intended use defined in contract. Disclaimer language present. No affirmative accountability clause.</td>
+            <td>Intended clinical use defined. Misuse scenarios addressed. Escalation failure response documented. Some outcome accountability language.</td>
+            <td>Explicit clinical accountability clause. Defined vendor responsibilities when AI contributes to adverse event. Outcome measurement contractually required. Joint governance structure.</td>
+            <td class="score-input">__</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="scoring-summary">
+      <div class="score-tiers">
+        <div class="score-tiers-title">Total score interpretation (max 25)</div>
+        <div class="score-tier-row st-green">
+          <div class="score-range">20–25</div>
+          <div class="score-tier-info">
+            <div class="score-tier-label">Proceed — with governance in place</div>
+            <div class="score-tier-action">Negotiate final contract terms. Build consent protocol. Define outcomes measurement.</div>
+          </div>
+        </div>
+        <div class="score-tier-row st-blue">
+          <div class="score-range">15–19</div>
+          <div class="score-tier-info">
+            <div class="score-tier-label">Conditional — address gaps before signing</div>
+            <div class="score-tier-action">Return to vendor with specific requirements. Re-score after contract negotiation.</div>
+          </div>
+        </div>
+        <div class="score-tier-row st-amber">
+          <div class="score-range">10–14</div>
+          <div class="score-tier-info">
+            <div class="score-tier-label">Pause — significant clinical risk present</div>
+            <div class="score-tier-action">Identify which dimensions are lowest. Determine if gaps are bridgeable or structural.</div>
+          </div>
+        </div>
+        <div class="score-tier-row st-red">
+          <div class="score-range">5–9</div>
+          <div class="score-tier-info">
+            <div class="score-tier-label">Do not proceed</div>
+            <div class="score-tier-action">This tool is not ready for patient-facing deployment. Document decision. Revisit in 12–18 months.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mandatory-checks">
+        <div class="mandatory-title">Automatic disqualifiers — regardless of total score</div>
+        <div class="check-item"><div class="check-box"></div><div class="check-text">Escalation Design scored 1<em>No escalation pathway = unacceptable clinical risk in any patient-facing application</em></div></div>
+        <div class="check-item"><div class="check-box"></div><div class="check-text">Clinical Accountability scored 1<em>Vendor accepts zero responsibility for AI-assisted clinical decisions</em></div></div>
+        <div class="check-item"><div class="check-box"></div><div class="check-text">PHI used for model training without explicit opt-out<em>HIPAA exposure and loss of patient trust</em></div></div>
+        <div class="check-item"><div class="check-box"></div><div class="check-text">No BAA available or offered<em>Non-starter for any healthcare deployment</em></div></div>
+        <div class="check-item"><div class="check-box"></div><div class="check-text">Bias testing not conducted or not available for review<em>Your patient population may not match the training population</em></div></div>
+        <div class="check-item"><div class="check-box"></div><div class="check-text">Vendor cannot name the peer-reviewed evidence base for clinical claims<em>"Clinically grounded" without evidence is a Level 1 claim dressed as Level 4</em></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <div class="footer-credit"><strong>Lisa Henderson, LPC-MHSP</strong><br>Avenoir Insights &nbsp;·&nbsp; lisa.henderson@avenoirinsights.com</div>
+    <div class="footer-series">
+      <div class="series-dot sd1"></div>
+      <div class="series-dot sd2"></div>
+      <div class="series-dot sd3 active"></div>
+    </div>
+    <div class="footer-contact">Taking consulting engagements Q3/Q4 2026<br></div>
+  </div>
+</div>
+
+</body>
+</html>
